@@ -62,11 +62,11 @@ def generate_query(state: OverallState, config: RunnableConfig) -> QueryGenerati
 
     # init Gemini 2.0 Flash
     llm = ChatGoogleGenerativeAI(
-        model=configurable.query_generator_model,
-        temperature=1.0,
-        max_retries=2,
-        api_key=os.getenv("GEMINI_API_KEY"),
-    )
+    model="gemini-1",
+    temperature=1.0,
+    max_retries=2,
+    api_key=os.getenv("GEMINI_API_KEY"),
+)
     structured_llm = llm.with_structured_output(SearchQueryList)
 
     # Format the prompt

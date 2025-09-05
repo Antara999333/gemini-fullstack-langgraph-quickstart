@@ -1,10 +1,14 @@
 import argparse
+import os
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
 from agent.graph import graph
 
+# Load environment variables from .env
+load_dotenv()
 
 def main() -> None:
-    """Run the research agent from the command line."""
+    """Run the LangGraph research agent from the command line."""
     parser = argparse.ArgumentParser(description="Run the LangGraph research agent")
     parser.add_argument("question", help="Research question")
     parser.add_argument(
@@ -20,19 +24,33 @@ def main() -> None:
         help="Maximum number of research loops",
     )
     parser.add_argument(
-        "--reasoning-model",
-        default="gemini-2.5-pro-preview-05-06",
-        help="Model for the final answer",
+        "--query-model",
+        default=os.getenv("QUERY_GENERATOR_MODEL", "gemini-1"),
+        help="Model used for generating initial search queries",
+    )
+    parser.add_argument(
+        "--reflection-model",
+        default=os.getenv("REFLECTION_MODEL", "gemini-1"),
+        help="Model used for reflection/follow-up queries",
+    )
+    parser.add_argument(
+        "--answer-model",
+        default=os.getenv("ANSWER_MODEL", "gemini-1"),
+        help="Model used for final answer",
     )
     args = parser.parse_args()
 
+    # Initialize the state for the agent
     state = {
         "messages": [HumanMessage(content=args.question)],
         "initial_search_query_count": args.initial_queries,
         "max_research_loops": args.max_loops,
-        "reasoning_model": args.reasoning_model,
+        "query_generator_model": args.query_model,
+        "reflection_model": args.reflection_model,
+        "reasoning_model": args.answer_model,
     }
 
+    # Run the graph
     result = graph.invoke(state)
     messages = result.get("messages", [])
     if messages:
