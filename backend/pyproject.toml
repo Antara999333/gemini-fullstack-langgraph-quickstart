@@ -1,7 +1,7 @@
 [project]
 name = "agent"
 version = "0.0.1"
-description = "Backend for the LangGraph agent"
+description = "Backend for the LangGraph agent with OpenAI integration"
 authors = [
     { name = "Philipp Schmid", email = "schmidphilipp1995@gmail.com" },
 ]
@@ -11,18 +11,26 @@ requires-python = ">=3.11,<4.0"
 dependencies = [
     "langgraph>=0.2.6",
     "langchain>=0.3.19",
-    "langchain-google-genai",
+    "langchain-openai>=0.2.0",
+    "openai>=1.40.0",
     "python-dotenv>=1.0.1",
     "langgraph-sdk>=0.1.57",
     "langgraph-cli",
     "langgraph-api",
     "fastapi",
-    "google-genai",
+    "requests>=2.31.0",
+    "aiohttp>=3.9.0",
 ]
 
-
 [project.optional-dependencies]
-dev = ["mypy>=1.11.1", "ruff>=0.6.1"]
+dev = [
+    "mypy>=1.11.1", 
+    "ruff>=0.6.1",
+    "pytest>=8.3.5",
+]
+tracing = [
+    "langsmith>=0.1.0",
+]
 
 [build-system]
 requires = ["setuptools>=73.0.0", "wheel"]
